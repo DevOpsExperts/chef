@@ -1,13 +1,15 @@
 ---
   driver:
     name: vagrant
+    # ssh:
+    #   insert_key: false
   
   provisioner:
     name: chef_zero
     # You may wish to disable always updating cookbooks in CI or other testing environments.
     # For example:
     #   always_update_cookbooks: <%= !ENV['CI'] %>
-    # always_update_cookbooks: true
+    always_update_cookbooks: true
   
   verifier:
     name: inspec
@@ -17,9 +19,11 @@
     - name: centos-7
       driver:
         box: centos/7
+      driver_config:
         network:
-          - ["private_network", { ip: " " }]
-  
+          - ["forwarded_port",  { guest: 8080, host: 8080, auto_correct: true}]
+          - ["private_network", { ip: "192.168.56.10"}]
+
   suites:
     - name: default
       run_list:
